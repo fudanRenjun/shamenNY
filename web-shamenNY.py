@@ -10,7 +10,7 @@ model = joblib.load('LGB1-7.pkl')
 
 # 定义特征名称（根据你的数据调整）
 feature_names = [
-    "2965",	"6567","11641","3929","4767","13637","9869"]
+    "2965","6567","11641","3929","4767","13637","9869"]
 
 # Streamlit 用户界
 st.title("Salmonella Antimicrobial Resistance Prediction App")
