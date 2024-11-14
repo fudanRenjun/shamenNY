@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import shap
 import matplotlib.pyplot as plt
+import lightgbm as lgb
 
 # 加载随机森林模型
 model = joblib.load('LGB1-7.pkl')
