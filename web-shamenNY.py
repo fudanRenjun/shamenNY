@@ -58,7 +58,6 @@ if st.button("Predict"):
     st.write(advice)
 
     # 计算并显示SHAP值
-    shap.initjs()
     explainer = shap.TreeExplainer(model)
     shap_values = explainer.shap_values(pd.DataFrame([feature_values], columns=feature_names))
 
