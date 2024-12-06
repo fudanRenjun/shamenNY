@@ -69,10 +69,10 @@ if st.button("Predict"):
     # 判断 shap_values 是否有两个类别
     if len(shap_values) > 1:
         # 使用类别 1 的 SHAP 值 (抗药性类别)
-        shap.waterfall_plot(shap_values[1][0])  # 传入的是一个 Explanation 对象中的 SHAP 值
+        shap.waterfall_plot(shap_values[1])  # 传入整个 Explanation 对象
     else:
         # 如果只有一个类别的 SHAP 值，则使用类别 0 的 SHAP 值
-        shap.waterfall_plot(shap_values[0][0])  # 传入的是一个 Explanation 对象中的 SHAP 值
+        shap.waterfall_plot(shap_values[0])  # 传入整个 Explanation 对象
 
     # 使用 Matplotlib 设置图像分辨率为 300 DPI
     fig = plt.figure(dpi=300)
