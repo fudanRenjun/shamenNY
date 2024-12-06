@@ -64,6 +64,10 @@ if st.button("Predict"):
     # 获取 SHAP 值数组
     shap_values_array = shap_values.values
 
+    # 对于二分类模型，shap_values_array 是二维的，包含两个类别的 SHAP 值
+    # shaps_values_array[0] 是类别 0 (Susceptible) 的 SHAP 值
+    # shaps_values_array[1] 是类别 1 (Resistant) 的 SHAP 值
+
     # 根据预测结果生成并显示SHAP force plot
     if predicted_class == 1:
         # 对于类别 1 (Resistant)，获取对应的 SHAP 值
@@ -77,5 +81,3 @@ if st.button("Predict"):
     # 保存SHAP图并显示
     plt.tight_layout()
     st.pyplot(plt)  # 用 Streamlit 显示交互式图形而不是保存到文件
-
-
