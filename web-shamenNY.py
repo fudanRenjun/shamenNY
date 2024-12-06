@@ -66,32 +66,15 @@ if st.button("Predict"):
     # 显示 SHAP waterfall 图
     st.subheader("SHAP Explanation (Waterfall Plot)")
 
+    # 判断 shap_values 是否有两个类别
+    if len(shap_values) > 1:
+        # 使用类别 1 的 SHAP 值 (抗药性类别)
+        shap.waterfall_plot(shap_values[1][0])
+    else:
+        # 如果只有一个类别的 SHAP 值，则使用类别 0 的 SHAP 值
+        shap.waterfall_plot(shap_values[0][0])
+
     # 使用 Matplotlib 设置图像分辨率为 300 DPI
     fig = plt.figure(dpi=300)
-    shap.waterfall_plot(shap_values[1][0])  # 1表示预测为抗药性（Resistant）类别的SHAP值
     st.pyplot(fig)
 
-
-    # 使用 SHAP 的 TreeExplainer
-    explainer = shap.TreeExplainer(model)
-    shap_values = explainer.shap_values(features)
-
-    # 打印 shap_values 结构以查看它的内容
-    st.write("SHAP values structure: ", type(shap_values), shap_values)
-
-    # 对于二分类问题，shap_values 可能是一个长度为2的列表
-    if isinstance(shap_values, list) and len(shap_values) == 2:
-        shap_values_class_1 = shap_values[1]  # 获取类别1的 SHAP 值
-        st.write("SHAP values for class 1: ", shap_values_class_1)
-        
-        # 生成 SHAP 条形图
-        shap.plots.bar(shap_values_class_1)
-
-        # 设置图像为 300 DPI
-        plt.savefig("shap_bar_plot.png", dpi=300, bbox_inches='tight')
-
-        # 在 Streamlit 中显示图像
-        st.image("shap_bar_plot.png")
-
-    else:
-        st.write("SHAP values is not as expected. It may not be a list with 2 elements.")
