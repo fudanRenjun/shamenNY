@@ -22,7 +22,7 @@ input_6567 = st.number_input("6567±1:", min_value=0.0000000001, max_value=1.0, 
 input_11641 = st.number_input("11641±1:", min_value=0.000000001, max_value=1.0, value=0.00011864, format="%.9f")
 input_3929 = st.number_input("3929±1:", min_value=0.0000000001, max_value=1.0, value=0.000149248, format="%.9f")
 input_4767 = st.number_input("4767±1:", min_value=0.0000000001, max_value=1.0, value=0.0000521, format="%.9f")
-input_13637 = st.number_input("13637±1:", min_value=0.000000001, max_value=1.0, value=0.00011864, format="%.9f")
+input_13637 = st.number_input("13637:", min_value=0.000000001, max_value=1.0, value=0.00011864, format="%.9f")
 input_9869 = st.number_input("9869±1:", min_value=0.0000000001, max_value=1.0, value=0.000149248, format="%.9f")
 
 # 将输入的数据转化为模型的输入格式
@@ -61,23 +61,22 @@ if st.button("Predict"):
     explainer = shap.TreeExplainer(model)
     shap_values = explainer.shap_values(features)
 
-    # 获取 SHAP 值数组
-    shap_values_array = shap_values[1]  # 这是针对二分类问题，获取类别1的 SHAP 值
+    # 打印 shap_values 结构以查看它的内容
+    st.write("SHAP values structure: ", type(shap_values), shap_values)
 
-    # 打印 SHAP 值的结构
-    st.write("SHAP values array structure: ", shap_values_array.shape)
+    # 对于二分类问题，shap_values 可能是一个长度为2的列表
+    if isinstance(shap_values, list) and len(shap_values) == 2:
+        shap_values_class_1 = shap_values[1]  # 获取类别1的 SHAP 值
+        st.write("SHAP values for class 1: ", shap_values_class_1)
+        
+        # 生成 SHAP 条形图
+        shap.plots.bar(shap_values_class_1)
 
-    # 生成 SHAP 条形图并显示
-    fig, ax = plt.subplots(figsize=(8, 6))  # 设置图形大小
+        # 设置图像为 300 DPI
+        plt.savefig("shap_bar_plot.png", dpi=300, bbox_inches='tight')
 
-    # 使用 shap.plots.bar 生成条形图，并显示
-    shap.plots.bar(shap_values[1], show=False)  # show=False 防止自动弹出图像
-    plt.tight_layout()
+        # 在 Streamlit 中显示图像
+        st.image("shap_bar_plot.png")
 
-    # 保存SHAP图并显示
-    plt.savefig("shap_bar_plot.png", dpi=300)  # 将图像保存到文件
-    st.image("shap_bar_plot.png")  # 通过 Streamlit 显示图像
-
-
-
-
+    else:
+        st.write("SHAP values is not as expected. It may not be a list with 2 elements.")
