@@ -5,10 +5,10 @@ import pandas as pd
 import shap
 import matplotlib.pyplot as plt
 
-# 加载随机森林模型
+# 加载模型
 model = joblib.load('LGB1-7.pkl')
 
-# 定义特征名称（根据你的数据调整）
+# 定义特征名称
 feature_names = [
     "2965", "6567", "11641", "3929", "4767", "13637", "9869"
 ]
@@ -61,17 +61,21 @@ if st.button("Predict"):
     explainer = shap.Explainer(model, pd.DataFrame([feature_values], columns=feature_names))
     shap_values = explainer(features)
 
+    # 获取 SHAP 值数组
+    shap_values_array = shap_values.values
+
     # 根据预测结果生成并显示SHAP force plot
     if predicted_class == 1:
         # 对于类别 1 (Resistant)，获取对应的 SHAP 值
-        shap.force_plot(explainer.expected_value[1], shap_values[1], 
+        shap.force_plot(explainer.expected_value[1], shap_values_array[1], 
                         pd.DataFrame([feature_values], columns=feature_names), matplotlib=True)
     else:
         # 对于类别 0 (Susceptible)，获取对应的 SHAP 值
-        shap.force_plot(explainer.expected_value[0], shap_values[0], 
+        shap.force_plot(explainer.expected_value[0], shap_values_array[0], 
                         pd.DataFrame([feature_values], columns=feature_names), matplotlib=True)
 
     # 保存SHAP图并显示
     plt.tight_layout()
     st.pyplot(plt)  # 用 Streamlit 显示交互式图形而不是保存到文件
+
 
