@@ -22,7 +22,7 @@ input_6567 = st.number_input("6567±1:", min_value=0.0000000001, max_value=1.0, 
 input_11641 = st.number_input("11641±1:", min_value=0.000000001, max_value=1.0, value=0.00011864, format="%.9f")
 input_3929 = st.number_input("3929±1:", min_value=0.0000000001, max_value=1.0, value=0.000149248, format="%.9f")
 input_4767 = st.number_input("4767±1:", min_value=0.0000000001, max_value=1.0, value=0.0000521, format="%.9f")
-input_13637 = st.number_input("13637:", min_value=0.000000001, max_value=1.0, value=0.00011864, format="%.9f")
+input_13637 = st.number_input("13637±1:", min_value=0.000000001, max_value=1.0, value=0.00011864, format="%.9f")
 input_9869 = st.number_input("9869±1:", min_value=0.0000000001, max_value=1.0, value=0.000149248, format="%.9f")
 
 # 将输入的数据转化为模型的输入格式
@@ -30,6 +30,9 @@ feature_values = [
     input_2965, input_6567, input_11641, input_3929, input_4767, input_13637, input_9869
 ]
 features = np.array([feature_values])
+
+# 创建 SHAP 解释器
+explainer = shap.TreeExplainer(model)
 
 # 当点击按钮时进行预测
 if st.button("Predict"):
@@ -56,6 +59,18 @@ if st.button("Predict"):
         )
 
     st.write(advice)
+
+    # 计算 SHAP 值
+    shap_values = explainer.shap_values(features)
+
+    # 显示 SHAP waterfall 图
+    st.subheader("SHAP Explanation (Waterfall Plot)")
+
+    # 使用 Matplotlib 设置图像分辨率为 300 DPI
+    fig = plt.figure(dpi=300)
+    shap.waterfall_plot(shap_values[1][0])  # 1表示预测为抗药性（Resistant）类别的SHAP值
+    st.pyplot(fig)
+
 
     # 使用 SHAP 的 TreeExplainer
     explainer = shap.TreeExplainer(model)
