@@ -22,7 +22,7 @@ input_6567 = st.number_input("6567±1:", min_value=0.0000000001, max_value=1.0, 
 input_11641 = st.number_input("11641±1:", min_value=0.000000001, max_value=1.0, value=0.00011864, format="%.9f")
 input_3929 = st.number_input("3929±1:", min_value=0.0000000001, max_value=1.0, value=0.000149248, format="%.9f")
 input_4767 = st.number_input("4767±1:", min_value=0.0000000001, max_value=1.0, value=0.0000521, format="%.9f")
-input_13637 = st.number_input("13637:", min_value=0.000000001, max_value=1.0, value=0.00011864, format="%.9f")
+input_13637 = st.number_input("13637±1:", min_value=0.000000001, max_value=1.0, value=0.00011864, format="%.9f")
 input_9869 = st.number_input("9869±1:", min_value=0.0000000001, max_value=1.0, value=0.000149248, format="%.9f")
 
 # 将输入的数据转化为模型的输入格式
@@ -67,16 +67,16 @@ if st.button("Predict"):
     # 打印 SHAP 值的结构
     st.write("SHAP values array structure: ", shap_values_array.shape)
 
-    # 通过调整 Matplotlib 图形大小来避免过大的图像
-    fig, ax = plt.subplots(figsize=(6, 4))  # 强制设置图像大小，避免过大
+    # 生成 SHAP 条形图并显示
+    fig, ax = plt.subplots(figsize=(8, 6))  # 设置图形大小
 
-    # 直接使用shap_values生成 Waterfall Plot，并显示
-    shap.plots.waterfall(shap_values[0], show=False)  # show=False 防止自动弹出图像
+    # 使用 shap.plots.bar 生成条形图，并显示
+    shap.plots.bar(shap_values[0], show=False)  # show=False 防止自动弹出图像
     plt.tight_layout()
 
     # 保存SHAP图并显示
-    plt.savefig("shap_waterfall_plot.png", dpi=300)  # 将图像保存到文件
-    st.image("shap_waterfall_plot.png")  # 通过 Streamlit 显示图像
+    plt.savefig("shap_bar_plot.png", dpi=300)  # 将图像保存到文件
+    st.image("shap_bar_plot.png")  # 通过 Streamlit 显示图像
 
 
 
