@@ -71,15 +71,12 @@ if st.button("Predict"):
     # 打印 SHAP 值的结构
     st.write("SHAP values array structure: ", shap_values_array.shape)
 
-    # 根据预测类别生成并显示 SHAP waterfall plot
-    if predicted_class == 1:
-        st.write("Generating Waterfall Plot for class 1 (Resistant)")
-        shap.plots.waterfall(shap_values[1])  # 生成类别1的 Waterfall Plot
-    else:
-        st.write("Generating Waterfall Plot for class 0 (Susceptible)")
-        shap.plots.waterfall(shap_values[0])  # 生成类别0的 Waterfall Plot
+    # 直接使用shap_values生成 Waterfall Plot
+    st.write("Generating Waterfall Plot")
+    shap.plots.waterfall(shap_values[0])  # 使用预测的类别生成 Waterfall Plot
 
     # 保存SHAP图并显示
     plt.tight_layout()
     st.pyplot(plt)  # 用 Streamlit 显示交互式图形而不是保存到文件
+
 
