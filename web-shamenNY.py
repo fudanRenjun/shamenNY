@@ -57,12 +57,12 @@ if st.button("Predict"):
 
     st.write(advice)
 
-    # 使用 SHAP 的通用解释器
-    explainer = shap.Explainer(model, pd.DataFrame([feature_values], columns=feature_names))
-    shap_values = explainer(features)
+    # 使用 SHAP 的 TreeExplainer
+    explainer = shap.TreeExplainer(model)
+    shap_values = explainer.shap_values(features)
 
     # 获取 SHAP 值数组
-    shap_values_array = shap_values.values
+    shap_values_array = shap_values[1]  # 这是针对二分类问题，获取类别1的 SHAP 值
 
     # 打印 SHAP 值的结构
     st.write("SHAP values array structure: ", shap_values_array.shape)
@@ -71,12 +71,13 @@ if st.button("Predict"):
     fig, ax = plt.subplots(figsize=(8, 6))  # 设置图形大小
 
     # 使用 shap.plots.bar 生成条形图，并显示
-    shap.plots.bar(shap_values[0], show=False)  # show=False 防止自动弹出图像
+    shap.plots.bar(shap_values[1], show=False)  # show=False 防止自动弹出图像
     plt.tight_layout()
 
     # 保存SHAP图并显示
     plt.savefig("shap_bar_plot.png", dpi=300)  # 将图像保存到文件
     st.image("shap_bar_plot.png")  # 通过 Streamlit 显示图像
+
 
 
 
