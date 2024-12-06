@@ -1,7 +1,6 @@
 import streamlit as st
 import joblib
 import numpy as np
-import pandas as pd
 import shap
 import matplotlib.pyplot as plt
 
@@ -66,14 +65,16 @@ if st.button("Predict"):
     # 显示 SHAP waterfall 图
     st.subheader("SHAP Explanation (Waterfall Plot)")
 
-    # 确保传递的是 Explanation 对象，而非数组
-    # 对于二分类模型，shap_values 会返回两个类别的 SHAP 值
-    if len(shap_values) > 1:
-        # 使用类别 1 的 SHAP 值 (抗药性类别)
-        shap.waterfall_plot(shap_values[1][0])  # 传入单个样本的 Explanation 对象
-    else:
-        # 如果只有一个类别的 SHAP 值，则使用类别 0 的 SHAP 值
-        shap.waterfall_plot(shap_values[0][0])  # 传入单个样本的 Explanation 对象
+    # 确保传递的是 Explanation 对象，而不是数组
+    # 对于二分类模型，shap_values 返回的是两个类别的 SHAP 解释对象
+    shap_value = shap_values[1]  # 选择类别 1 的 SHAP 解释对象（抗药性）
+
+    # 如果 shap_values 返回的是多个解释对象，每个解释对象对应一个样本
+    if isinstance(shap_value, list):
+        shap_value = shap_value[0]  # 获取第一个样本的解释对象
+
+    # 传递给 waterfall_plot 的应该是 Explanation 对象
+    shap.waterfall_plot(shap_value)
 
     # 使用 Matplotlib 设置图像分辨率为 300 DPI
     fig = plt.figure(dpi=300)
