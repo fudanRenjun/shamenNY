@@ -30,8 +30,6 @@ feature_values = [
 ]
 features = np.array([feature_values])
 
-# 创建 SHAP 解释器
-explainer = shap.TreeExplainer(model)
 
 # 当点击按钮时进行预测
 if st.button("Predict"):
@@ -58,28 +56,3 @@ if st.button("Predict"):
         )
 
     st.write(advice)
-
-    # 计算 SHAP 值，返回的是 Explanation 对象
-    shap_values = explainer.shap_values(features)
-
-    # 显示 SHAP waterfall 图
-    st.subheader("SHAP Explanation (Waterfall Plot)")
-
-    # 检查返回的 shap_values 是列表，并选择一个类别（0 或 1）的 SHAP 值
-    if isinstance(shap_values, list):
-        # 对于二分类问题，shap_values 会包含两个元素，分别是类 0 和类 1 的 SHAP 值
-        shap_value = shap_values[1]  # 对于抗药性类别选择 1
-    else:
-        # 如果没有返回列表，直接选择唯一的 SHAP 值
-        shap_value = shap_values
-    
-    # 传递给 waterfall_plot 的应该是 Explanation 对象
-    if isinstance(shap_value, list):
-        shap_value = shap_value[0]  # 获取第一个样本的解释对象
-
-    # 使用 SHAP 的 waterfall_plot 方法绘制 SHAP 水流图
-    shap.waterfall_plot(shap_value)
-
-    # 使用 Matplotlib 设置图像分辨率为 300 DPI
-    fig = plt.figure(dpi=300)
-    st.pyplot(fig)
