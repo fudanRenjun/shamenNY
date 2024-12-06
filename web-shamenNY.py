@@ -65,22 +65,21 @@ if st.button("Predict"):
     # 显示 SHAP waterfall 图
     st.subheader("SHAP Explanation (Waterfall Plot)")
 
-    # 确保返回的 shap_values 是 Explanation 对象
+    # 检查返回的 shap_values 是列表，并选择一个类别（0 或 1）的 SHAP 值
     if isinstance(shap_values, list):
-        # 如果返回多个类别的 SHAP 值，选择一个类别的解释对象
-        shap_value = shap_values[0]  # 选择类别 0 (易感性) 或类别 1 (抗药性)
+        # 对于二分类问题，shap_values 会包含两个元素，分别是类 0 和类 1 的 SHAP 值
+        shap_value = shap_values[1]  # 对于抗药性类别选择 1
     else:
-        # 如果只有一个类别的 SHAP 值，直接选择该解释对象
+        # 如果没有返回列表，直接选择唯一的 SHAP 值
         shap_value = shap_values
     
-    # `shap_value` 必须是 Explanation 对象，确保类型正确
+    # 传递给 waterfall_plot 的应该是 Explanation 对象
     if isinstance(shap_value, list):
         shap_value = shap_value[0]  # 获取第一个样本的解释对象
 
-    # 传递给 waterfall_plot 的应该是 Explanation 对象
+    # 使用 SHAP 的 waterfall_plot 方法绘制 SHAP 水流图
     shap.waterfall_plot(shap_value)
 
     # 使用 Matplotlib 设置图像分辨率为 300 DPI
     fig = plt.figure(dpi=300)
     st.pyplot(fig)
-
