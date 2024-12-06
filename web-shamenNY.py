@@ -61,23 +61,25 @@ if st.button("Predict"):
     explainer = shap.Explainer(model, pd.DataFrame([feature_values], columns=feature_names))
     shap_values = explainer(features)
 
+    # 打印 SHAP 结果和 expected_value
+    st.write("SHAP Values: ", shap_values)
+    st.write("Expected Value: ", explainer.expected_value)
+
     # 获取 SHAP 值数组
     shap_values_array = shap_values.values
 
-    # 对于二分类模型，shap_values_array 是二维的，包含两个类别的 SHAP 值
-    # shaps_values_array[0] 是类别 0 (Susceptible) 的 SHAP 值
-    # shaps_values_array[1] 是类别 1 (Resistant) 的 SHAP 值
+    # 打印 SHAP 值的结构
+    st.write("SHAP values array structure: ", shap_values_array.shape)
 
-    # 根据预测结果生成并显示SHAP force plot
+    # 根据预测类别生成并显示 SHAP waterfall plot
     if predicted_class == 1:
-        # 对于类别 1 (Resistant)，获取对应的 SHAP 值
-        shap.force_plot(explainer.expected_value[1], shap_values_array[1], 
-                        pd.DataFrame([feature_values], columns=feature_names), matplotlib=True)
+        st.write("Generating Waterfall Plot for class 1 (Resistant)")
+        shap.plots.waterfall(shap_values[1])  # 生成类别1的 Waterfall Plot
     else:
-        # 对于类别 0 (Susceptible)，获取对应的 SHAP 值
-        shap.force_plot(explainer.expected_value[0], shap_values_array[0], 
-                        pd.DataFrame([feature_values], columns=feature_names), matplotlib=True)
+        st.write("Generating Waterfall Plot for class 0 (Susceptible)")
+        shap.plots.waterfall(shap_values[0])  # 生成类别0的 Waterfall Plot
 
     # 保存SHAP图并显示
     plt.tight_layout()
     st.pyplot(plt)  # 用 Streamlit 显示交互式图形而不是保存到文件
+
