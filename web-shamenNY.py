@@ -4,16 +4,16 @@ import numpy as np
 import pandas as pd
 import shap
 import matplotlib.pyplot as plt
-import lightgbm as lgb
 
 # 加载随机森林模型
-model = joblib.load('LGB1-7.pkl')
+model = joblib.load('E:/RS/XIA/NY/feature/LGB/LGB1-7.pkl')
 
 # 定义特征名称（根据你的数据调整）
 feature_names = [
-    "2965","6567","11641","3929","4767","13637","9869"]
+    "2965", "6567", "11641", "3929", "4767", "13637", "9869"
+]
 
-# Streamlit 用户界
+# Streamlit 用户界面
 st.title("Salmonella Antimicrobial Resistance Prediction App")
 
 # 用户输入特征数据
@@ -27,7 +27,7 @@ input_9869 = st.number_input("9869±1:", min_value=0.0000000001, max_value=1.0, 
 
 # 将输入的数据转化为模型的输入格式
 feature_values = [
-    input_2965, input_6567, input_11641, input_3929, input_4767, input_13637,input_9869
+    input_2965, input_6567, input_11641, input_3929, input_4767, input_13637, input_9869
 ]
 features = np.array([feature_values])
 
@@ -57,18 +57,18 @@ if st.button("Predict"):
 
     st.write(advice)
 
-    # 计算并显示SHAP值
-    explainer = shap.TreeExplainer(model)
-    shap_values = explainer.shap_values(pd.DataFrame([feature_values], columns=feature_names))
+    # 使用 SHAP 的通用解释器
+    explainer = shap.Explainer(model, pd.DataFrame([feature_values], columns=feature_names))
+    shap_values = explainer(features)
 
     # 根据预测结果生成并显示SHAP force plot
     if predicted_class == 1:
-        shap.force_plot(explainer.expected_value[1], shap_values[1],
+        shap.force_plot(explainer.expected_value[1], shap_values[1], 
                         pd.DataFrame([feature_values], columns=feature_names), matplotlib=True)
     else:
-        shap.force_plot(explainer.expected_value[0], shap_values[0],
+        shap.force_plot(explainer.expected_value[0], shap_values[0], 
                         pd.DataFrame([feature_values], columns=feature_names), matplotlib=True)
 
     # 保存SHAP图并显示
-    plt.savefig("E:/RS/XIA/NY/feature/LGB/shap_force_plot.png", bbox_inches='tight', dpi=1200)
-    st.image("shap_force_plot.png")
+    plt.tight_layout()
+    st.pyplot(plt)  # 用 Streamlit 显示交互式图形而不是保存到文件
