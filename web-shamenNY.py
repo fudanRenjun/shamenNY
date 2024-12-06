@@ -65,15 +65,15 @@ if st.button("Predict"):
     # 显示 SHAP waterfall 图
     st.subheader("SHAP Explanation (Waterfall Plot)")
 
-    # 处理 SHAP 值，根据是否有两个类别的 SHAP 值来动态选择
-    if len(shap_values) > 1:
-        # 如果有两个类别，选择类别 1（抗药性）
-        shap_value = shap_values[1]  # 对应抗药性（Resistant）
+    # 确保返回的 shap_values 是 Explanation 对象
+    if isinstance(shap_values, list):
+        # 如果返回多个类别的 SHAP 值，选择一个类别的解释对象
+        shap_value = shap_values[0]  # 选择类别 0 (易感性) 或类别 1 (抗药性)
     else:
-        # 如果只有一个类别，选择该类别的 SHAP 值
-        shap_value = shap_values[0]  # 对应易感性（Susceptible）
-
-    # 如果 shap_values 返回的是多个解释对象，每个解释对象对应一个样本
+        # 如果只有一个类别的 SHAP 值，直接选择该解释对象
+        shap_value = shap_values
+    
+    # `shap_value` 必须是 Explanation 对象，确保类型正确
     if isinstance(shap_value, list):
         shap_value = shap_value[0]  # 获取第一个样本的解释对象
 
@@ -83,3 +83,4 @@ if st.button("Predict"):
     # 使用 Matplotlib 设置图像分辨率为 300 DPI
     fig = plt.figure(dpi=300)
     st.pyplot(fig)
+
