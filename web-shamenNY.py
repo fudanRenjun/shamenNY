@@ -65,9 +65,13 @@ if st.button("Predict"):
     # 显示 SHAP waterfall 图
     st.subheader("SHAP Explanation (Waterfall Plot)")
 
-    # 确保传递的是 Explanation 对象，而不是数组
-    # 对于二分类模型，shap_values 返回的是两个类别的 SHAP 解释对象
-    shap_value = shap_values[1]  # 选择类别 1 的 SHAP 解释对象（抗药性）
+    # 处理 SHAP 值，根据是否有两个类别的 SHAP 值来动态选择
+    if len(shap_values) > 1:
+        # 如果有两个类别，选择类别 1（抗药性）
+        shap_value = shap_values[1]  # 对应抗药性（Resistant）
+    else:
+        # 如果只有一个类别，选择该类别的 SHAP 值
+        shap_value = shap_values[0]  # 对应易感性（Susceptible）
 
     # 如果 shap_values 返回的是多个解释对象，每个解释对象对应一个样本
     if isinstance(shap_value, list):
