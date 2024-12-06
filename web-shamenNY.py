@@ -61,26 +61,22 @@ if st.button("Predict"):
     explainer = shap.Explainer(model, pd.DataFrame([feature_values], columns=feature_names))
     shap_values = explainer(features)
 
-    # 打印 SHAP 结果和 expected_value
-    st.write("SHAP Values: ", shap_values)
-    st.write("Expected Value: ", explainer.expected_value)
-
     # 获取 SHAP 值数组
     shap_values_array = shap_values.values
 
     # 打印 SHAP 值的结构
     st.write("SHAP values array structure: ", shap_values_array.shape)
 
-    # 设置 Matplotlib 图形尺寸
-    plt.figure(figsize=(6, 4))  # 设置适当的图像尺寸，避免过大的图像
+    # 通过调整 Matplotlib 图形大小来避免过大的图像
+    fig, ax = plt.subplots(figsize=(6, 4))  # 强制设置图像大小，避免过大
 
-    # 直接使用shap_values生成 Waterfall Plot
-    st.write("Generating Waterfall Plot")
-    shap.plots.waterfall(shap_values[0])  # 使用预测的类别生成 Waterfall Plot
+    # 直接使用shap_values生成 Waterfall Plot，并显示
+    shap.plots.waterfall(shap_values[0], show=False)  # show=False 防止自动弹出图像
+    plt.tight_layout()
 
     # 保存SHAP图并显示
-    plt.tight_layout()
-    st.pyplot(plt)  # 用 Streamlit 显示交互式图形而不是保存到文件
+    plt.savefig("shap_waterfall_plot.png", dpi=300)  # 将图像保存到文件
+    st.image("shap_waterfall_plot.png")  # 通过 Streamlit 显示图像
 
 
 
