@@ -71,6 +71,9 @@ if st.button("Predict"):
     # 打印 SHAP 值的结构
     st.write("SHAP values array structure: ", shap_values_array.shape)
 
+    # 设置 Matplotlib 图形尺寸
+    plt.figure(figsize=(6, 4))  # 设置适当的图像尺寸，避免过大的图像
+
     # 直接使用shap_values生成 Waterfall Plot
     st.write("Generating Waterfall Plot")
     shap.plots.waterfall(shap_values[0])  # 使用预测的类别生成 Waterfall Plot
@@ -78,5 +81,6 @@ if st.button("Predict"):
     # 保存SHAP图并显示
     plt.tight_layout()
     st.pyplot(plt)  # 用 Streamlit 显示交互式图形而不是保存到文件
+
 
 
